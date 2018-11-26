@@ -55,6 +55,7 @@ fun main(args: Array<String>) {
     val countProducts = liste.filter { it.price>1.00 }.map{ it -> it.price*0.8 }.count { it>1.00}
     println(countProducts)
 
+    println("Any -> Teuere als 20 Euro : " + anyRec(liste, {b : Product -> b.price>20}));
 }
 
 
@@ -64,7 +65,7 @@ fun salesBoost (type: DiscountTypes) : (Double) -> Double {
     return when (type) {
         DiscountTypes.MWST_SPAREN -> { price: Double -> price / 1.19 }
         DiscountTypes.STD_DISCOUNT -> { price: Double -> price * defaultDiscount }
-        DiscountTypes.DISCOUNT_ON_EXPENSIVE_ITEMS -> { price: Double -> price / 1.3 }
+        DiscountTypes.DISCOUNT_ON_EXPENSIVE_ITEMS -> { price: Double -> if(price<20)  price/1.3 else price}
         DiscountTypes.DOUBLE_DISCOUNT -> { price: Double -> price * (defaultDiscount * 2) }
         else -> { price: Double -> price }
     }
@@ -74,7 +75,11 @@ fun salesBoost (type: DiscountTypes) : (Double) -> Double {
 fun any ( list : List<Product> , bedingung : (Product)->Boolean ) : Boolean {
 
     for (elem in list){
-        if(elem)
-    }
-
+        if(bedingung(elem)){
+            return true;
+        }}
+    return false;
 }
+
+
+fun anyRec ( list : List<Product> , bedingung : (Product)->Boolean ) : Boolean = if (!list.isEmpty()) if (bedingung(list.first())) true else anyRec(list.drop(1),bedingung) else false
