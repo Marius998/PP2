@@ -8,8 +8,11 @@ fun main(args: Array<String>) {
     val liste : MutableList<Product> = mutableListOf(p1,p2,p3,p4,p5);
     val p6 = Product("Mais",1.00,24);
     val p7 = Product("Gold",201.0,24);
+    val p8 = Product("Budder",1.10,24);
+
     liste+=p6;
     liste+=p7;
+    liste+=p8;
 
     for(product in liste){
         println(product);
@@ -44,5 +47,34 @@ fun main(args: Array<String>) {
     var preis = 0.0;
     liste.forEach { preis+=it.price}
     println("Preis von allem : $preis");
+
+
+    val gesamtWert = liste.fold( 0.0 , { gesamtWert, it -> gesamtWert+it.price  } )
+    println(" Preis von allem (2) : "+gesamtWert)
+
+    val countProducts = liste.filter { it.price>1.00 }.map{ it -> it.price*0.8 }.count { it>1.00}
+    println(countProducts)
+
+}
+
+
+
+fun salesBoost (type: DiscountTypes) : (Double) -> Double {
+    val defaultDiscount = 0.9
+    return when (type) {
+        DiscountTypes.MWST_SPAREN -> { price: Double -> price / 1.19 }
+        DiscountTypes.STD_DISCOUNT -> { price: Double -> price * defaultDiscount }
+        DiscountTypes.DISCOUNT_ON_EXPENSIVE_ITEMS -> { price: Double -> price / 1.3 }
+        DiscountTypes.DOUBLE_DISCOUNT -> { price: Double -> price * (defaultDiscount * 2) }
+        else -> { price: Double -> price }
+    }
+}
+
+
+fun any ( list : List<Product> , bedingung : (Product)->Boolean ) : Boolean {
+
+    for (elem in list){
+        if(elem)
+    }
 
 }
